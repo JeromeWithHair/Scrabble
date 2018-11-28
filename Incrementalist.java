@@ -75,11 +75,20 @@ public class Incrementalist implements ScrabbleAI {
                 c = 'E'; // This could be improved slightly by trying all possibilities for the blank
             }
             for (String word : new String[] {c + " ", " " + c}) {
-                for (int row = 0; row < Board.WIDTH; row++) {
-                    for (int col = 0; col < Board.WIDTH; col++) {
-                        Location location = new Location(row, col);
-                        for (Location direction : new Location[] {Location.HORIZONTAL, Location.VERTICAL}) {
+               for(Location i: LocationArrayList){
+                        Location location = i;
+           
+                        for (Location direction : new Location[] {Location.HORIZONTAL, Location.VERTICAL, location.anti(HORIZONTAL), location.anti(VERTICAL}) {
                             try {
+                             /*  if(horizontal or vertical){
+                                    letter = start letter;
+                                }
+                                else{
+                                    letter = last letter;
+                                }
+                                for( all words
+                                // Build Words*/
+                                )
                                 gateKeeper.verifyLegality(word, location, direction);
                                 int score = gateKeeper.score(word, location, direction);
                                 if (score > bestScore) {
