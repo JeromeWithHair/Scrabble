@@ -46,12 +46,19 @@ public class Tibbopotomus implements ScrabbleAI {
     }
     /**helper for getEmptyDirection */
     private boolean isEmptyDirection(Location spot, Location dir) {
-        
-        if (B.isOccupied(spot.antineighbor(dir))) return false;
-        if (B.isOccupied(spot.neighbor(dir))) return false;
-        if (B.isOccupied(spot.neighbor(dir).neighbor(dir))) return false;
-        if (B.isOccupied(spot.neighbor(dir).neighbor(dir).neighbor(dir))) return false;
-        if (B.isOccupied(spot.neighbor(dir).neighbor(dir).neighbor(dir).neighbor(dir))) return false;
+        Location temp = new Location(spot.getRow(), spot.getCol());
+        //check if opposite dir off-board or open
+        if (spot.antineighbor(dir).isOnBoard()) {
+            if (B.isOccupied(spot.antineighbor(dir))) return false;
+        }
+        //look for open space in word direction, check if off board
+        for (int i = 0; i < 4; i++) {
+            if (!(temp.neighbor(dir).isOnBoard()) || B.isOccupied(temp.neighbor(dir))) return false;
+            temp = temp.neighbor(dir);
+        }
+
         return true;
     }
+    
+    private boolean isOffBoard
 }
