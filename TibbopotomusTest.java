@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class TibbopotomusTest {
 
     private Board board;
-
+    // Jerome is the best person ever
     @BeforeEach
     public void setUp() {
         board = new Board();
