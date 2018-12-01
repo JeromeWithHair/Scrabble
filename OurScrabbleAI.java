@@ -106,7 +106,30 @@ static void printAllKLengthRec(char[] set, String prefix, int n, int k) {
         }
         return new ExchangeTiles(ALL_TILES);
     }
-
+    
+    private static void permute(ArrayList<String> w, String str, int l, int r){
+        if(l==r){
+            w.add(str) ;
+            return ;
+        }
+        else{
+            for (int i = 0; i < r; i++) {
+                str = swap(str, l, i);
+                permute(w, str, l+1, r) ;
+                str = swap(str, l, i) ;
+            }
+        }
+    }
+    
+    private static String swap(String a, int i, int j){
+        char temp ;
+        char[] charArray = a.toCharArray() ;
+        temp = charArray[i] ;
+        charArray[i] = charArray[j] ;
+        charArray[j] = temp ;
+        return String.valueOf(charArray) ;
+    }
+    
     /**
      * Technically this tries to make a two-letter word by playing one tile; it won't find words that simply add a
      * tile to the end of an existing word.
@@ -138,7 +161,14 @@ static void printAllKLengthRec(char[] set, String prefix, int n, int k) {
                                     d = 'E';
                                 }
                                 int fact = factorial(4);
-                                for (String word : new String[]{Combinations(/*etc, etc*/)}) {
+                                char[] set = {a, b, c, d} ;
+                                String string = new String(set) ;
+                                int n = set.length() ;
+                                ArrayList<String> words = new ArrayList() ;
+                                permute(words, string, 0, n-1) ;
+                                String[] permutations = new String[words.size()] ;
+                                words.toArray(permutations) ;
+                                for (String word : permutations) {
                                     for (int row = 0; row < Board.WIDTH; row++) {
                                         for (int col = 0; col < Board.WIDTH; col++) {
                                             Location location = new Location(row, col);
