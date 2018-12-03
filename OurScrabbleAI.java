@@ -87,11 +87,37 @@ public class OurScrabbleAI implements ScrabbleAI {
 
     }
 
+    private static void combination(ArrayList<String> w, int arr[], int n, int r, int index, int data[], int i)
+    {
+        if(index==r) {
+            for(int j = 0; j<r; j++) {
+                w.add(data[j]);
+                return;
+            }
+            
+            if(i>=n) {
+                return;
+            }
+            
+            data[index] = arr[i];
+            combination(w, arr, n, r, index+1, data, i+1);
+            
+            combination(w, arr, n, r, index, data, i+1);
+        }
+    }
+        
+
     // swap the characters at indices i and j
     private static void swap(char[] a, int i, int j) {
         char c = a[i];
         a[i] = a[j];
         a[j] = c;
+    }
+    
+    private void saveCombos(ArrayList<String> w, int arr[], int n, int r) {
+        int data[] = new int[r];
+        
+        combination(w, arr, n, r, 0, data, 0);
     }
 
     /**
