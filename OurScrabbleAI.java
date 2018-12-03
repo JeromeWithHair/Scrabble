@@ -123,7 +123,7 @@ public class OurScrabbleAI implements ScrabbleAI {
                                     d = 'E';
                                 }
                                 char[] set = {a, b, c, d, ' '} ;
-                                String string = new String(set) ;
+                                String elements = new String(set) ;
                                 int n = set.length ;
                                 int k = n ; //k needs to change in a for loop
                                 ArrayList<String> words = new ArrayList() ;
