@@ -39,13 +39,13 @@ public class OurScrabbleAI implements ScrabbleAI {
         ArrayList<Character> hand = gateKeeper.getHand();
         String bestWord = null;
         int bestScore = -1;
-        char[] uH = new chac[7]; // updated hand to account for blanks
+        char[] uH = new char[7]; // updated hand to account for blanks
         for(int i = 0; i<7; i++){
-         if(hand.get(i) == " "){  uH[i] = 'E';  }
+         if(hand.get(i) == ' '){  uH[i] = 'E';  }
             else{uH[i] = hand.get(i); }  
         }
         
-        String string = new String(uH) ;
+        String elements = new String(uH) ;
         int n = uH.length ;
         int k = n ; //k needs to change in a for loop
         ArrayList<String> words = new ArrayList() ;
