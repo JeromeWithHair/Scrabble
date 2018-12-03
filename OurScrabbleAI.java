@@ -128,29 +128,20 @@ public class OurScrabbleAI implements ScrabbleAI {
         ArrayList<Character> hand = gateKeeper.getHand();
         PlayWord bestMove = null;
         int bestScore = -1;
-        for (int i = 0; i < hand.size(); i++) {
-            for (int j = 0; j < hand.size(); j++) {
-                for (int k = 0; k < hand.size(); k++) {
-                    for (int m = 0; m < hand.size(); m++) {
-                        if (i != j && i != k && i != m && j != k && j != m && k != m) {
-                            try {
-                                char a = hand.get(i);
-                                if (a == '_') {
-                                    a = 'E';
-                                }
-                                char b = hand.get(j);
-                                if (b == '_') {
-                                    b = 'E';
-                                }
-                                char c = hand.get(k);
-                                if (c == '_') {
-                                    c = 'E';
-                                }
-                                char d = hand.get(m);
-                                if (d == '_') {
-                                    d = 'E';
-                                }
-                                char[] set = {a, b, c, d, ' '} ;
+        ArrayList<Character> hand = gateKeeper.getHand();
+        String bestWord = null;
+        int bestScore = -1;
+        char[] uH = new char[7]; // updated hand to account for blanks
+        for(int i = 0; i<7; i++){
+         if(hand.get(i) == ' '){  uH[i] = 'E';  }
+            else{uH[i] = hand.get(i); }  
+        }
+        boolean validWord = false ;
+        while(!validWord){
+                                //while(!verifyLegality){
+                                    //get plength
+                                    //get array list of subsets of plength
+                                    //for(int u : subset arrayList){
                                 String elements = new String(set) ;
                                 int n = set.length ;
                                 int pLength = n ; //m needs to change in a for loop
