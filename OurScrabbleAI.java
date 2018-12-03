@@ -50,6 +50,7 @@ public class OurScrabbleAI implements ScrabbleAI {
         int k = n ; //k needs to change in a for loop
         ArrayList<String> words = new ArrayList() ;
         perm1(words, elements) ;
+        String[] permutations = new String[words.size()] ;
         words.toArray(permutations) ;
         for (String word : permutations) {
            try {
