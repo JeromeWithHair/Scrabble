@@ -55,18 +55,26 @@ public class OurScrabbleAI {
         } else return -1;
     }
 
-static void printAllKLength(char[] set, int k) {
-    int n = set.length;
-    printAllKLengthRec(set, "", n, k);
-}
-
-static void printAllKLengthRec(char[] set, String prefix, int n, int k) {
-        String words [] = new String
-        
-        if(k==0) {
-
+    
+    static Arraylist<String> createSubSets (ArrayList<Character> hand, int size){
+        Arraylist<char[]> sets = new Arraylist<char[]>(factorial(size));
+        char subSet[] = new char[8];
+        if(size==7){
+        //return hand with a space    
         }
-}
+         for (int i = 0; i < hand.size(); i++) { // zero: just adds a space
+           for (int j = i+1; j < hand.size(); j++) { // one
+               for (int k = j+1; k < hand.size(); k++) { // 2
+                   for (int m = k+1; m < hand.size(); m++) { // 3
+                       for (int n = m+1; n < hand.size(); n++) { //4
+                          for (int o = n+1; o < hand.size(); o++) { //5
+                             for (int p = o+1; p < hand.size(); p++) {  //6
+                                  for (int q = p+1; q < hand.size(); q++) { //7
+                                     
+        
+        
+        
+    }
 
 
     /**
@@ -138,35 +146,13 @@ static void printAllKLengthRec(char[] set, String prefix, int n, int k) {
         ArrayList<Character> hand = gateKeeper.getHand();
         PlayWord bestMove = null;
         int bestScore = -1;
-        for (int i = 0; i < hand.size(); i++) {
-            for (int j = 0; j < hand.size(); j++) {
-                for (int k = 0; k < hand.size(); k++) {
-                    for (int m = 0; m < hand.size(); m++) {
-                        if (i != j && i != k && i != m && j != k && j != m && k != m) {
-                            try {
-                                char a = hand.get(i);
-                                if (a == '_') {
-                                    a = 'E';
-                                }
-                                char b = hand.get(j);
-                                if (b == '_') {
-                                    b = 'E';
-                                }
-                                char c = hand.get(k);
-                                if (c == '_') {
-                                    c = 'E';
-                                }
-                                char d = hand.get(m);
-                                if (d == '_') {
-                                    d = 'E';
-                                }
-                                int fact = factorial(4);
-                                char[] set = {a, b, c, d} ;
-                                String string = new String(set) ;
-                                int n = set.length() ;
-                                ArrayList<String> words = new ArrayList() ;
-                                permute(words, string, 0, n-1) ;
-                                String[] permutations = new String[words.size()] ;
+                                //int fact = factorial(4);
+                                //char[] set = {a, b, c, d} ;
+                                //String string = new String(set) ;
+                                //int n = set.length() ;
+                                ArrayList<String> words = permute(hand) ;
+                               // permute(words, string, 0, n-1) ;
+                                //String[] permutations = new String[words.size()] ;
                                 words.toArray(permutations) ;
                                 for (String word : permutations) {
                                     for (int row = 0; row < Board.WIDTH; row++) {
@@ -186,11 +172,6 @@ static void printAllKLengthRec(char[] set, String prefix, int n, int k) {
                                         }
                                     }
                                 }
-                            } catch (IllegalMoveException e) {
-                            }
-                        }
-                    }
-                }
             }
             if (bestMove != null) {
                 return bestMove;
