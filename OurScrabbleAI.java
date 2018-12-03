@@ -27,7 +27,7 @@ public class OurScrabbleAI implements ScrabbleAI {
     @Override
     public ScrabbleMove chooseMove() {
         if (gateKeeper.getSquare(Location.CENTER) == Board.DOUBLE_WORD_SCORE) {
-            return findTwoTileMove();
+            return findFirstMove();
         }
         return findFourTileMove();
     }
@@ -35,39 +35,40 @@ public class OurScrabbleAI implements ScrabbleAI {
     /**
      * This is necessary for the first turn, as one-letter words are not allowed.
      */
-    private ScrabbleMove findTwoTileMove() {
+    private ScrabbleMove findFirstMove() {
         ArrayList<Character> hand = gateKeeper.getHand();
         String bestWord = null;
         int bestScore = -1;
-        for (int i = 0; i < hand.size(); i++) {
-            for (int j = 0; j < hand.size(); j++) {
-                if (i != j) {
-                    try {
-                        char a = hand.get(i);
-                        if (a == '_') {
-                            a = 'E'; // This could be improved slightly by trying all possibilities for the blank
-                        }
-                        char b = hand.get(j);
-                        if (b == '_') {
-                            b = 'E'; // This could be improved slightly by trying all possibilities for the blank
-                        }
-                        String word = "" + a + b;
-                        StdOut.println("Trying " + word);
-                        gateKeeper.verifyLegality(word, Location.CENTER, Location.HORIZONTAL);
-                        int score = gateKeeper.score(word, Location.CENTER, Location.HORIZONTAL);
-                        if (score > bestScore) {
-                            bestScore = score;
-                            bestWord = word;
-                        }
-                    } catch (IllegalMoveException e) {
+        char[] uH = new chac[7]; // updated hand to account for blanks
+        for(int i = 0; i<7; i++){
+         if(hand.get(i) == " "){  uH[i] = 'E';  }
+            else{uH[i] = hand.get(i); }  
+        }
+        
+        String string = new String(uH) ;
+        int n = uH.length ;
+        int k = n ; //k needs to change in a for loop
+        ArrayList<String> words = new ArrayList() ;
+        perm1(words, elements) ;
+        words.toArray(permutations) ;
+        for (String word : permutations) {
+           try {
+                   StdOut.println("Trying " + word);
+                   gateKeeper.verifyLegality(word, Location.CENTER, Location.HORIZONTAL);
+                   int score = gateKeeper.score(word, Location.CENTER, Location.HORIZONTAL);
+                   if (score > bestScore) {
+                         bestScore = score;
+                         bestWord = word;
+                    }
+              } catch (IllegalMoveException e) {
                         // It wasn't legal; go on to the next one
                     }
-                }
-            }
         }
+         
         if (bestScore > -1) {
             return new PlayWord(bestWord, Location.CENTER, Location.HORIZONTAL);
         }
+        //TODO if no 7 letter start, do a 6 letter start
         return new ExchangeTiles(ALL_TILES);
     }
 
