@@ -1,0 +1,43 @@
+public class Permutations {
+
+
+    public  static void perm1(String s) { perm1("", s); }
+
+    private static void perm1(String prefix, String s) {
+        int n = s.length();
+        if (n == 0) StdOut.println(prefix);
+        else {
+            for (int i = 0; i < n; i++)
+                perm1(prefix + s.charAt(i), s.substring(0, i) + s.substring(i+1, n));
+        }
+
+    }
+
+    // swap the characters at indices i and j
+    private static void swap(char[] a, int i, int j) {
+        char c = a[i];
+        a[i] = a[j];
+        a[j] = c;
+    }
+
+    public static void main(String[] args) {
+
+        char a = 'g' ;
+        char b = 'f' ;
+        char c = 'i' ;
+        char d = 's' ;
+        char e = 'h' ;
+        char f = 'i' ;
+        char g = 'n' ;
+
+        char[] set = {a, b, c, d, e, f, g, ' '};
+        String string = new String(set) ;
+
+        int n = set.length ;
+        int k = n ;
+        String elements = string.substring(0, k) ;
+        perm1(elements) ;
+    }
+
+
+}
