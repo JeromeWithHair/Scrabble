@@ -1,7 +1,8 @@
-import java.util.ArrayList;
-import java.util.io.*;
 
-public class OurScrabbleAI {
+import java.util.ArrayList;
+
+
+public class OurScrabbleAI implements ScrabbleAI {
 
     /**
      * Dumb AI that picks the highest-scoring one-tile move. Plays a two-tile move on the first turn. Exchanges all of its
@@ -55,18 +56,18 @@ public class OurScrabbleAI {
         } else return -1;
     }
 
-static void printAllKLength(char[] set, int k) {
-    int n = set.length;
-    printAllKLengthRec(set, "", n, k);
-}
+    /*static void printAllKLength(char[] set, int k) {
+        int n = set.length;
+        printAllKLengthRec(set, "", n, k);
+    }
 
-static void printAllKLengthRec(char[] set, String prefix, int n, int k) {
-        String words [] = new String
-        
+    static void printAllKLengthRec(char[] set, String prefix, int n, int k) {
+        String words [] = new String;
+
         if(k==0) {
 
         }
-}
+    }*/
 
 
     /**
@@ -89,6 +90,7 @@ static void printAllKLengthRec(char[] set, String prefix, int n, int k) {
                             b = 'E'; // This could be improved slightly by trying all possibilities for the blank
                         }
                         String word = "" + a + b;
+                        StdOut.println("Trying " + word);
                         gateKeeper.verifyLegality(word, Location.CENTER, Location.HORIZONTAL);
                         int score = gateKeeper.score(word, Location.CENTER, Location.HORIZONTAL);
                         if (score > bestScore) {
@@ -106,7 +108,7 @@ static void printAllKLengthRec(char[] set, String prefix, int n, int k) {
         }
         return new ExchangeTiles(ALL_TILES);
     }
-    
+
     private static void permute(ArrayList<String> w, String str, int l, int r){
         if(l==r){
             w.add(str) ;
@@ -120,7 +122,7 @@ static void printAllKLengthRec(char[] set, String prefix, int n, int k) {
             }
         }
     }
-    
+
     private static String swap(String a, int i, int j){
         char temp ;
         char[] charArray = a.toCharArray() ;
@@ -129,7 +131,7 @@ static void printAllKLengthRec(char[] set, String prefix, int n, int k) {
         charArray[j] = temp ;
         return String.valueOf(charArray) ;
     }
-    
+
     /**
      * Technically this tries to make a two-letter word by playing one tile; it won't find words that simply add a
      * tile to the end of an existing word.
@@ -161,14 +163,15 @@ static void printAllKLengthRec(char[] set, String prefix, int n, int k) {
                                     d = 'E';
                                 }
                                 int fact = factorial(4);
-                                char[] set = {a, b, c, d} ;
+                                char[] set = {a, b, c, d, ' '} ;
                                 String string = new String(set) ;
-                                int n = set.length() ;
-                                ArrayList<String> words = new ArrayList() ;
+                                int n = set.length ;
+                                ArrayList<String> words = new ArrayList<>() ;
                                 permute(words, string, 0, n-1) ;
                                 String[] permutations = new String[words.size()] ;
                                 words.toArray(permutations) ;
                                 for (String word : permutations) {
+
                                     for (int row = 0; row < Board.WIDTH; row++) {
                                         for (int col = 0; col < Board.WIDTH; col++) {
                                             Location location = new Location(row, col);
@@ -181,12 +184,14 @@ static void printAllKLengthRec(char[] set, String prefix, int n, int k) {
                                                         bestMove = new PlayWord(word, location, direction);
                                                     }
                                                 } catch (IllegalMoveException e) {
+                                                    System.err.println(e.getMessage());
                                                 }
                                             }
                                         }
                                     }
                                 }
-                            } catch (IllegalMoveException e) {
+                            } catch (Exception e) {
+                                System.err.println(e.getMessage());
                             }
                         }
                     }
