@@ -32,6 +32,44 @@ public class OurScrabbleAI implements ScrabbleAI {
         return findFourTileMove();
     }
 
+    public int factorial(int n) {
+        if (n == 1) {
+            return 1;
+        }
+        if (n == 2) {
+            return 2;
+        }
+        if (n == 3) {
+            return 6;
+        }
+        if (n == 4) {
+            return 24;
+        }
+        if (n == 5) {
+            return 120;
+        }
+        if (n == 6) {
+            return 720;
+        }
+        if (n == 7) {
+            return 5040;
+        } else return -1;
+    }
+
+    /*static void printAllKLength(char[] set, int k) {
+        int n = set.length;
+        printAllKLengthRec(set, "", n, k);
+    }
+
+    static void printAllKLengthRec(char[] set, String prefix, int n, int k) {
+        String words [] = new String;
+
+        if(k==0) {
+
+        }
+    }*/
+
+
     /**
      * This is necessary for the first turn, as one-letter words are not allowed.
      */
@@ -71,27 +109,25 @@ public class OurScrabbleAI implements ScrabbleAI {
         return new ExchangeTiles(ALL_TILES);
     }
 
-    private static void permute(ArrayList<String> w, String str, int l, int r){
-        if(l==r){
-            w.add(str) ;
-            return ;
+    public static void perm1(ArrayList<String> w, String s) { perm1(w,"", s); }
+
+    private static void perm1(ArrayList<String> w, String prefix, String s) {
+        int n = s.length();
+        if (n == 0) {
+            w.add(prefix) ;
         }
-        else{
-            for (int i = 0; i < r; i++) {
-                str = swap(str, l, i);
-                permute(w, str, l+1, r) ;
-                str = swap(str, l, i) ;
-            }
+        else {
+            for (int i = 0; i < n; i++)
+                perm1(w, prefix + s.charAt(i), s.substring(0, i) + s.substring(i+1, n));
         }
+
     }
 
-    private static String swap(String a, int i, int j){
-        char temp ;
-        char[] charArray = a.toCharArray() ;
-        temp = charArray[i] ;
-        charArray[i] = charArray[j] ;
-        charArray[j] = temp ;
-        return String.valueOf(charArray) ;
+    // swap the characters at indices i and j
+    private static void swap(char[] a, int i, int j) {
+        char c = a[i];
+        a[i] = a[j];
+        a[j] = c;
     }
 
     /**
@@ -124,11 +160,13 @@ public class OurScrabbleAI implements ScrabbleAI {
                                 if (d == '_') {
                                     d = 'E';
                                 }
+                                int fact = factorial(4);
                                 char[] set = {a, b, c, d, ' '} ;
                                 String string = new String(set) ;
                                 int n = set.length ;
-                                ArrayList<String> words = new ArrayList<>() ;
-                                permute(words, string, 0, n-1) ;
+                                int k = n ; //k needs to change in a for loop
+                                ArrayList<String> words = new ArrayList() ;
+                                perm1(words, elements) ;
                                 String[] permutations = new String[words.size()] ;
                                 words.toArray(permutations) ;
                                 for (String word : permutations) {
