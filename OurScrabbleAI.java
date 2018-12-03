@@ -125,7 +125,7 @@ public class OurScrabbleAI implements ScrabbleAI {
                                 char[] set = {a, b, c, d, ' '} ;
                                 String elements = new String(set) ;
                                 int n = set.length ;
-                                int k = n ; //k needs to change in a for loop
+                                int pLength = n ; //m needs to change in a for loop
                                 ArrayList<String> words = new ArrayList() ;
                                 perm1(words, elements) ;
                                 String[] permutations = new String[words.size()] ;
