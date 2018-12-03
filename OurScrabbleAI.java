@@ -32,44 +32,6 @@ public class OurScrabbleAI implements ScrabbleAI {
         return findFourTileMove();
     }
 
-    public int factorial(int n) {
-        if (n == 1) {
-            return 1;
-        }
-        if (n == 2) {
-            return 2;
-        }
-        if (n == 3) {
-            return 6;
-        }
-        if (n == 4) {
-            return 24;
-        }
-        if (n == 5) {
-            return 120;
-        }
-        if (n == 6) {
-            return 720;
-        }
-        if (n == 7) {
-            return 5040;
-        } else return -1;
-    }
-
-    /*static void printAllKLength(char[] set, int k) {
-        int n = set.length;
-        printAllKLengthRec(set, "", n, k);
-    }
-
-    static void printAllKLengthRec(char[] set, String prefix, int n, int k) {
-        String words [] = new String;
-
-        if(k==0) {
-
-        }
-    }*/
-
-
     /**
      * This is necessary for the first turn, as one-letter words are not allowed.
      */
@@ -162,7 +124,6 @@ public class OurScrabbleAI implements ScrabbleAI {
                                 if (d == '_') {
                                     d = 'E';
                                 }
-                                int fact = factorial(4);
                                 char[] set = {a, b, c, d, ' '} ;
                                 String string = new String(set) ;
                                 int n = set.length ;
