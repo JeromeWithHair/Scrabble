@@ -1,4 +1,3 @@
-
 import java.util.ArrayList;
 
 
@@ -32,6 +31,18 @@ public class OurScrabbleAI implements ScrabbleAI {
         return findFourTileMove();
     }
 
+    private static char[] getHand() {
+        char a = getHand(0);
+        char b = getHand(1);
+        char c = getHand(2);
+        char d = getHand(3);
+        char e = getHand(4);
+        char f = getHand(5);
+        char g = getHand(6);
+
+        return char[] set = {a, b, c, d, e, f, g, ' '};
+    }
+
     /**
      * This is necessary for the first turn, as one-letter words are not allowed.
      */
@@ -40,32 +51,35 @@ public class OurScrabbleAI implements ScrabbleAI {
         String bestWord = null;
         int bestScore = -1;
         char[] uH = new char[7]; // updated hand to account for blanks
-        for(int i = 0; i<7; i++){
-         if(hand.get(i) == ' '){  uH[i] = 'E';  }
-            else{uH[i] = hand.get(i); }  
+        for (int i = 0; i < 7; i++) {
+            if (hand.get(i) == ' ') {
+                uH[i] = 'E';
+            } else {
+                uH[i] = hand.get(i);
+            }
         }
-        
-        String elements = new String(uH) ;
-        int n = uH.length ;
-        int k = n ; //k needs to change in a for loop
-        ArrayList<String> words = new ArrayList() ;
-        perm1(words, elements) ;
-        String[] permutations = new String[words.size()] ;
-        words.toArray(permutations) ;
+
+        String elements = new String(uH);
+        int n = uH.length;
+        int k = n; //k needs to change in a for loop
+        ArrayList<String> words = new ArrayList();
+        perm1(words, elements);
+        String[] permutations = new String[words.size()];
+        words.toArray(permutations);
         for (String word : permutations) {
-           try {
-                   StdOut.println("Trying " + word);
-                   gateKeeper.verifyLegality(word, Location.CENTER, Location.HORIZONTAL);
-                   int score = gateKeeper.score(word, Location.CENTER, Location.HORIZONTAL);
-                   if (score > bestScore) {
-                         bestScore = score;
-                         bestWord = word;
-                    }
-              } catch (IllegalMoveException e) {
-                        // It wasn't legal; go on to the next one
-                    }
+            try {
+                StdOut.println("Trying " + word);
+                gateKeeper.verifyLegality(word, Location.CENTER, Location.HORIZONTAL);
+                int score = gateKeeper.score(word, Location.CENTER, Location.HORIZONTAL);
+                if (score > bestScore) {
+                    bestScore = score;
+                    bestWord = word;
+                }
+            } catch (IllegalMoveException e) {
+                // It wasn't legal; go on to the next one
+            }
         }
-         
+
         if (bestScore > -1) {
             return new PlayWord(bestWord, Location.CENTER, Location.HORIZONTAL);
         }
@@ -73,39 +87,39 @@ public class OurScrabbleAI implements ScrabbleAI {
         return new ExchangeTiles(ALL_TILES);
     }
 
-    public static void perm1(ArrayList<String> w, String s) { perm1(w,"", s); }
+    public static void perm1(ArrayList<String> w, String s) {
+        perm1(w, "", s);
+    }
 
     private static void perm1(ArrayList<String> w, String prefix, String s) {
         int n = s.length();
         if (n == 0) {
-            w.add(prefix) ;
-        }
-        else {
+            w.add(prefix);
+        } else {
             for (int i = 0; i < n; i++)
-                perm1(w, prefix + s.charAt(i), s.substring(0, i) + s.substring(i+1, n));
+                perm1(w, prefix + s.charAt(i), s.substring(0, i) + s.substring(i + 1, n));
         }
 
     }
 
-    private static void combination(ArrayList<String> w, int arr[], int n, int r, int index, int data[], int i)
-    {
-        if(index==r) {
-            for(int j = 0; j<r; j++) {
+    private static void combination(ArrayList<char[]> allCharArrays, int n, int r, int index, ArrayList<char data[]>, int i) {
+        if (index == r) {
+            for (int j = 0; j < r; j++) {
                 w.add(data[j]);
                 return;
             }
-            
-            if(i>=n) {
+
+            if (i >= n) {
                 return;
             }
-            
+
             data[index] = arr[i];
-            combination(w, arr, n, r, index+1, data, i+1);
-            
-            combination(w, arr, n, r, index, data, i+1);
+            combination(w, arr, n, r, index + 1, data, i + 1);
+
+            combination(w, arr, n, r, index, data, i + 1);
         }
     }
-        
+
 
     // swap the characters at indices i and j
     private static void swap(char[] a, int i, int j) {
@@ -113,10 +127,10 @@ public class OurScrabbleAI implements ScrabbleAI {
         a[i] = a[j];
         a[j] = c;
     }
-    
+
     private void saveCombos(ArrayList<String> w, int arr[], int n, int r) {
         int data[] = new int[r];
-        
+
         combination(w, arr, n, r, 0, data, 0);
     }
 
@@ -128,67 +142,52 @@ public class OurScrabbleAI implements ScrabbleAI {
         ArrayList<Character> hand = gateKeeper.getHand();
         PlayWord bestMove = null;
         int bestScore = -1;
-        for (int i = 0; i < hand.size(); i++) {
-            for (int j = 0; j < hand.size(); j++) {
-                for (int k = 0; k < hand.size(); k++) {
-                    for (int m = 0; m < hand.size(); m++) {
-                        if (i != j && i != k && i != m && j != k && j != m && k != m) {
-                            try {
-                                char a = hand.get(i);
-                                if (a == '_') {
-                                    a = 'E';
-                                }
-                                char b = hand.get(j);
-                                if (b == '_') {
-                                    b = 'E';
-                                }
-                                char c = hand.get(k);
-                                if (c == '_') {
-                                    c = 'E';
-                                }
-                                char d = hand.get(m);
-                                if (d == '_') {
-                                    d = 'E';
-                                }
-                                char[] set = {a, b, c, d, ' '} ;
-                                String elements = new String(set) ;
-                                int n = set.length ;
-                                int pLength = n ; //m needs to change in a for loop
-                                ArrayList<String> words = new ArrayList() ;
-                                perm1(words, elements) ;
-                                String[] permutations = new String[words.size()] ;
-                                words.toArray(permutations) ;
-                                for (String word : permutations) {
-
-                                    for (int row = 0; row < Board.WIDTH; row++) {
-                                        for (int col = 0; col < Board.WIDTH; col++) {
-                                            Location location = new Location(row, col);
-                                            for (Location direction : new Location[]{Location.HORIZONTAL, Location.VERTICAL}) {
-                                                try {
-                                                    gateKeeper.verifyLegality(word, location, direction);
-                                                    int score = gateKeeper.score(word, location, direction);
-                                                    if (score > bestScore) {
-                                                        bestScore = score;
-                                                        bestMove = new PlayWord(word, location, direction);
-                                                    }
-                                                } catch (IllegalMoveException e) {
-                                                    System.err.println(e.getMessage());
-                                                }
-                                            }
-                                        }
+        char[] set = getHand();
+        boolean foundWord = false;
+        int plength = 8;
+        while (!foundWord) {
+            ArrayList<char[]> allCharArrays = new ArrayList<char[]>();
+            allCharArrays = combination(allCharArrays, 8, plength, 0, ArrayList<char data[]>, 0) ;
+            for (int w : allCharArrays) { //for everything in the arraylist
+                String elements = new String(set);
+                ArrayList<String> words = new ArrayList();
+                perm1(words, elements);
+                String[] permutations = new String[words.size()];
+                words.toArray(permutations);
+                for (String word : permutations) { //for every permutation of a specific character array
+                    for (int row = 0; row < Board.WIDTH; row++) {
+                        for (int col = 0; col < Board.WIDTH; col++) {
+                            Location location = new Location(row, col);
+                            for (Location direction : new Location[]{Location.HORIZONTAL, Location.VERTICAL}) {
+                                try {
+                                    gateKeeper.verifyLegality(word, location, direction);
+                                    int score = gateKeeper.score(word, location, direction);
+                                    if (score > bestScore) {
+                                        bestScore = score;
+                                        bestMove = new PlayWord(word, location, direction);
+                                        foundWord = true;
                                     }
+                                } catch (IllegalMoveException e) {
+                                    System.err.println(e.getMessage());
                                 }
-                            } catch (Exception e) {
-                                System.err.println(e.getMessage());
                             }
                         }
                     }
                 }
             }
-            if (bestMove != null) {
-                return bestMove;
-            }
+
+            plength--;
+        } catch(Exception e){
+            System.err.println(e.getMessage());
         }
-        return new ExchangeTiles(ALL_TILES);
     }
 }
+                }
+                        }
+                        if(bestMove!=null){
+                        return bestMove;
+                        }
+                        }
+                        return new ExchangeTiles(ALL_TILES);
+                        }
+                        }
