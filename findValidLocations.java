@@ -11,7 +11,7 @@ for(int i = 0; i<15; i++){
     }
   }
    else{//check path 
-      int[] check = new int[2];
+      int[] check;
      check = findEmptyPath(b,current,HORIZONTAL);
       lengths[i][j][0] = check[0];
       lengths[i][j][1] = check[1];
@@ -28,12 +28,25 @@ for(int i = 0; i<15; i++){
        int index = 0;
        Location current = start;
        while(index<9){
-         if(b.isOccupied(current) || !current.isOnBoard()){ // found a tile
-         break; 
-        }
-        if(min == -1 && (b.isOccupied(current.neighbor(direction.opposite) || b.isOccupied(current.antineighbor(direction.opposite))){
-         min = index+1;
-        }
+         if(!current.isOnBoard()){
+                if(min == -1){
+                    index = 9;
+                    break;
+                }
+                else{
+                    break;
+                }
+            }
+            if(b.isOccupied(current)){ // found a tile
+                break;
+            }
+            Location neighbor1 = current.neighbor(direction.opposite());
+            Location antineighbor2 = current.antineighbor(direction.opposite());
+            boolean check1 = neighbor1.isOnBoard() && b.isOccupied(neighbor1);
+            boolean check2 = antineighbor2.isOnBoard() && b.isOccupied(antineighbor2);
+            if(min == -1 && (check1 || check2)){
+                min = index+1;
+            }
         index++;
         current = current.neighbor(direction);
        }
