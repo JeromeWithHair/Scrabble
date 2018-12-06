@@ -9,13 +9,47 @@ public class testingValidLocation {
         Board b = new Board();
         b.placeWord("kiss", Location.CENTER, Location.VERTICAL);
         b.placeWord("aws", new Location(9,8), Location.HORIZONTAL);
+        b.placeWord("succes", new Location(3,10), Location.VERTICAL);
         int[][][] lengths = findValidLocations(b);
         for(int i = 0; i< 15; i++){
             StdOut.println();
             for(int j = 0; j<15; j++){
+                if(i < 10){ StdOut.print(" ");}
+                if(j < 10){ StdOut.print(" ");}
                 StdOut.print(i + "," + j + ": " + Arrays.toString(lengths[i][j]) + "  ");
             }
         }
+        StdOut.println();
+        ArrayList<Location[]> priority = createPriority(lengths,7);
+        StdOut.println(priority.size());
+        priority = createPriority(lengths,4);
+        StdOut.println(priority.size());
+        /*for(int i = 0; i< 10; i++) {
+            Location[] check = priority.get(i);
+            StdOut.println(check[0].getRow() + " " + check[0].getColumn());
+        }*/
+    }
+
+    public static ArrayList<Location[]> createPriority(int[][][] lengths, int size){
+        ArrayList<Location[]> priority = new ArrayList<Location[]>(15*15);
+        for(int i = 0; i<15; i++){
+            for(int j = 0; j<15; j++){
+                Location[] location = new Location[2];
+                if(lengths[i][j][0] == size || (lengths[i][j][0] >= size && size >= lengths[i][j][1])){
+                    location[0] = new Location(i,j);
+                    location[1] = Location.HORIZONTAL;
+                    priority.add(location);
+                }
+                if(lengths[i][j][2] == size || (lengths[i][j][2] >= size && size >= lengths[i][j][3])){
+                    location[0] = new Location(i,j);
+                    location[1] = Location.VERTICAL;
+                    priority.add(location);
+                }
+            }
+        }
+
+        return  priority;
+
     }
 
     public static int[][][] findValidLocations(Board b){
