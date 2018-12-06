@@ -44,28 +44,27 @@ for(int i = 0; i<15; i++){
             Location antineighbor2 = current.antineighbor(direction.opposite());
             boolean check1 = neighbor1.isOnBoard() && b.isOccupied(neighbor1);
             boolean check2 = antineighbor2.isOnBoard() && b.isOccupied(antineighbor2);
-          if(index == 0 && current.antineighbor(direction).isOnBoard() && b.isOccupied(current.antineighbor(direction))){
-                min = 1;
-            }
-            if(min == -1 && (check1 || check2)){
+          if(min == -1 && (check1 || check2)){
                 min = index+1;
+                if(min == 8) { min = -1;}
             }
-        index++;
-        current = current.neighbor(direction);
-       }
-           int[] values = new int[2];
-           if(min == -1 && index == 9){ //cannot play off
+            index++;
+            current = current.neighbor(direction);
+        }
+        int[] values = new int[2];
+        if(min == -1 && index == 8){ //cannot play off
             values[0] = 0;
             values[1] = 0;
-           }
-           else if (min == -1 && index < 9){ // ends by ramming into a word, but nothing before then
-             values[0] = index;
-             values[1] = index;
-           }
-           else{
-             values[0] = index;
-             values[1] = min;
-           }
-           return values;
+        }
+        else if (min == -1 && index < 8){ // ends by ramming into a word, but nothing before then
+            values[0] = index;
+            values[1] = index;
+        }
+        else{
+            if(index == 8){ index = 7;}
+            values[0] = index;
+            values[1] = min;
+        }
+        return values;
       }
 
