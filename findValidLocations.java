@@ -44,6 +44,9 @@ for(int i = 0; i<15; i++){
             Location antineighbor2 = current.antineighbor(direction.opposite());
             boolean check1 = neighbor1.isOnBoard() && b.isOccupied(neighbor1);
             boolean check2 = antineighbor2.isOnBoard() && b.isOccupied(antineighbor2);
+          if(index == 0 && current.antineighbor(direction).isOnBoard() && b.isOccupied(current.antineighbor(direction))){
+                min = 1;
+            }
             if(min == -1 && (check1 || check2)){
                 min = index+1;
             }
