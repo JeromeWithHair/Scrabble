@@ -139,6 +139,8 @@ public class OurScrabbleAI implements ScrabbleAI {
      * tile to the end of an existing word.
      */
     private ScrabbleMove findFourTileMove() {
+        Board b = new Board();
+        int[][][] lengths = findValidLocations(b);
         ArrayList<Character> hand = gateKeeper.getHand();
         PlayWord bestMove = null;
         int bestScore = -1;
@@ -146,6 +148,7 @@ public class OurScrabbleAI implements ScrabbleAI {
         boolean foundWord = false;
         int plength = 8;
         while (!foundWord) {
+            ArrayList<Location[]> priority = createPriority(lengths,plength);
             ArrayList<char[]> allCharArrays = new ArrayList<char[]>();
             allCharArrays = combination(allCharArrays, 8, plength, 0, ArrayList<char data[]>, 0) ;
             for (int w : allCharArrays) { //for everything in the arraylist
@@ -155,13 +158,12 @@ public class OurScrabbleAI implements ScrabbleAI {
                 String[] permutations = new String[words.size()];
                 words.toArray(permutations);
                 for (String word : permutations) { //for every permutation of a specific character array
-                    for (int row = 0; row < Board.WIDTH; row++) {
-                        for (int col = 0; col < Board.WIDTH; col++) {
-                            Location location = new Location(row, col);
-                            for (Location direction : new Location[]{Location.HORIZONTAL, Location.VERTICAL}) {
+                    for(Location thing : priority){
+                        for(int j=0; j<priority.length; j++){
+                            //for (Location direction : new Location[]{Location.HORIZONTAL, Location.VERTICAL}) {
                                 try {
-                                    gateKeeper.verifyLegality(word, location, direction);
-                                    int score = gateKeeper.score(word, location, direction);
+                                    gateKeeper.verifyLegality(word, thing[j], thing[j+1]);
+                                    int score = gateKeeper.score(word, thing[j], thing[j+1]);
                                     if (score > bestScore) {
                                         bestScore = score;
                                         bestMove = new PlayWord(word, location, direction);
@@ -171,7 +173,6 @@ public class OurScrabbleAI implements ScrabbleAI {
                                     System.err.println(e.getMessage());
                                 }
                             }
-                        }
                     }
                 }
             }
