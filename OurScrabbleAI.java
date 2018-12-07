@@ -2,6 +2,18 @@ import java.util.ArrayList;
 
 
 public class OurScrabbleAI implements ScrabbleAI {
+    
+     private HashSet<String> invalidBigrams = new HashSet<>();
+     In bin = new In("invalidBigrams.txt");
+     while (!bin.isEmpty()) invalidBigrams.add(bin.readString());
+    
+    private boolean noInvalidBigrams(String key) {
+        for (int i = 0; i < key.length()-1; i++) {
+            String biGram = key.substring(i, i+2);
+            if invalidBigrams.contains(biGram) return false;
+        }
+        return true;
+    }
 
     /**
      * Dumb AI that picks the highest-scoring one-tile move. Plays a two-tile move on the first turn. Exchanges all of its
@@ -94,7 +106,7 @@ public class OurScrabbleAI implements ScrabbleAI {
     private static void perm1(ArrayList<String> w, String prefix, String s) {
         int n = s.length();
         if (n == 0) {
-            w.add(prefix);
+            if (noInvalidBigrams(prefix)) w.add(prefix);
         } else {
             for (int i = 0; i < n; i++)
                 perm1(w, prefix + s.charAt(i), s.substring(0, i) + s.substring(i + 1, n));
