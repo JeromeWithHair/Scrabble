@@ -11,48 +11,93 @@ public class testingValidLocation {
         b.placeWord("aws", new Location(9,8), Location.HORIZONTAL);
         b.placeWord("succes", new Location(3,10), Location.VERTICAL);
         int[][][] lengths = findValidLocations(b);
-        for(int i = 0; i< 15; i++){
+         int[][][] lengths = findValidLocations(b);
+      /* for(int i = 0; i< 15; i++){
             StdOut.println();
             for(int j = 0; j<15; j++){
                 if(i < 10){ StdOut.print(" ");}
                 if(j < 10){ StdOut.print(" ");}
                 StdOut.print(i + "," + j + ": " + Arrays.toString(lengths[i][j]) + "  ");
             }
-        }
+        }*/
         StdOut.println();
-        ArrayList<Location[]> priority = createPriority(lengths,7);
-        StdOut.println(priority.size());
-        priority = createPriority(lengths,4);
-        StdOut.println(priority.size());
+        //ArrayList<Location[]> priority = createPriority(lengths,7, 5);
+        //StdOut.println(priority.size());
+       // priority = createPriority(lengths,4);
+       // StdOut.println(priority.size());
         /*for(int i = 0; i< 10; i++) {
             Location[] check = priority.get(i);
             StdOut.println(check[0].getRow() + " " + check[0].getColumn());
         }*/
+        int size = 7;
+        for(int i = 0; i< size; i++){
+            //TODO address spaces at beginning or end
+
+        }
+
+
     }
 
-    public static ArrayList<Location[]> createPriority(int[][][] lengths, int size){
+    // works on words with space at beginning or end
+    public static ArrayList<Location[]> createPriority(int[][][] lengths, int size){ // Finds priority of length of  a string in one chunk
         ArrayList<Location[]> priority = new ArrayList<Location[]>(15*15);
         for(int i = 0; i<15; i++){
             for(int j = 0; j<15; j++){
                 Location[] location = new Location[2];
-                if(lengths[i][j][0] == size || (lengths[i][j][0] >= size && size >= lengths[i][j][1])){
+                if((lengths[i][j][0] >= size && size >= lengths[i][j][1])){
                     location[0] = new Location(i,j);
                     location[1] = Location.HORIZONTAL;
                     priority.add(location);
                 }
-                if(lengths[i][j][2] == size || (lengths[i][j][2] >= size && size >= lengths[i][j][3])){
+                if((lengths[i][j][2] >= size && size >= lengths[i][j][3])){
                     location[0] = new Location(i,j);
                     location[1] = Location.VERTICAL;
                     priority.add(location);
                 }
             }
         }
-
         return  priority;
-
     }
 
-    public static int[][][] findValidLocations(Board b){
+    /**
+     * Creates a priority lists of locations to check based on a size of word and location of a space in the word
+     * @param lengths - array of size lengths from findValidLocations
+     * @param size - size of string trying to check
+     * @param space - location of single space in a string
+     * @return
+     */
+
+    public static ArrayList<Location[]> createPriority(int[][][] lengths, int size, int space) { // Finds priority of length of  a string in one chunk
+        if(space == 0 || space == size){
+            return createPriority(lengths,size);
+        }
+        ArrayList<Location[]> priority = new ArrayList<Location[]>(15 * 15);
+        int split = size-space;
+        for (int i = 0; i < 15; i++) {
+            for (int j = 0; j < 15; j++) {
+                Location[] location = new Location[2];
+                if (lengths[i][j][0] == space && j+space+1 < 15) {
+                    if(lengths[i][j+space+1][0] >=split && split >= lengths[i][j+space+1][1]) {
+                        location[0] = new Location(i, j);
+                        location[1] = Location.HORIZONTAL;
+                        priority.add(location);
+                    }
+                }
+                if (lengths[i][j][2] == space && i+space+1<15) {
+                    if(lengths[i+space+1][j][2] >=split && split >= lengths[i+space+1][j][3]) {
+                        location[0] = new Location(i, j);
+                        location[1] = Location.VERTICAL;
+                        priority.add(location);
+                    }
+                }
+            }
+        }
+
+        return priority;
+    }
+
+
+        public static int[][][] findValidLocations(Board b){
         int[][][] lengths = new int[15][15][4];
         for(int i = 0; i<15; i++){
             for(int j = 0; j<15; j++){
