@@ -102,10 +102,10 @@ public class OurScrabbleAI implements ScrabbleAI {
 
     }
 
-    private static void combination(ArrayList<char[]> allCharArrays, int n, int r, int index, ArrayList<char data[]>, int i) {
+    private static void combination(ArrayList<char[]> w, int n, int r, int index, char[] data, int i, char[] arr) {
         if (index == r) {
             for (int j = 0; j < r; j++) {
-                w.add(data[j]);
+                w.add(data);
                 return;
             }
 
@@ -114,9 +114,9 @@ public class OurScrabbleAI implements ScrabbleAI {
             }
 
             data[index] = arr[i];
-            combination(w, arr, n, r, index + 1, data, i + 1);
+            combination(w, n, r, index + 1, data, i + 1, arr);
 
-            combination(w, arr, n, r, index, data, i + 1);
+            combination(w, n, r, index, data, i + 1, arr);
         }
     }
 
@@ -128,10 +128,10 @@ public class OurScrabbleAI implements ScrabbleAI {
         a[j] = c;
     }
 
-    private void saveCombos(ArrayList<String> w, int arr[], int n, int r) {
-        int data[] = new int[r];
+    private void saveCombos(ArrayList<char[]> w, char arr[], int n, int r) {
+        char data[] = new char[r];
 
-        combination(w, arr, n, r, 0, data, 0);
+        combination(w, n, r, 0, data, 0, arr);
     }
 
     /**
@@ -143,13 +143,18 @@ public class OurScrabbleAI implements ScrabbleAI {
         PlayWord bestMove = null;
         int bestScore = -1;
         char[] set = getHand();
+        char[] combSet = new char[set.length+1];
+        for (int h = 0; h < set.length; h++) {
+            combSet[h] = set[h];
+        }
+        combSet[set.length] = ' ';
         boolean foundWord = false;
         int plength = 8;
         while (!foundWord) {
             ArrayList<char[]> allCharArrays = new ArrayList<char[]>();
-            allCharArrays = combination(allCharArrays, 8, plength, 0, ArrayList<char data[]>, 0) ;
-            for (int w : allCharArrays) { //for everything in the arraylist
-                String elements = new String(set);
+            combination(allCharArrays, 8, plength, 0, new char[plength], 0, combSet) ;
+            for (char[] w : allCharArrays) { //for everything in the arraylist
+                String elements = new String(w);
                 ArrayList<String> words = new ArrayList();
                 perm1(words, elements);
                 String[] permutations = new String[words.size()];
@@ -177,17 +182,7 @@ public class OurScrabbleAI implements ScrabbleAI {
             }
 
             plength--;
-        } catch(Exception e){
-            System.err.println(e.getMessage());
         }
+        return bestMove;
     }
-}
-                }
-                        }
-                        if(bestMove!=null){
-                        return bestMove;
-                        }
-                        }
-                        return new ExchangeTiles(ALL_TILES);
-                        }
-                        }
+}            
