@@ -120,14 +120,6 @@ public class OurScrabbleAI implements ScrabbleAI {
         }
     }
 
-
-    // swap the characters at indices i and j
-    private static void swap(char[] a, int i, int j) {
-        char c = a[i];
-        a[i] = a[j];
-        a[j] = c;
-    }
-
     private void saveCombos(ArrayList<String> w, int arr[], int n, int r) {
         int data[] = new int[r];
 
