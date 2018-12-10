@@ -27,20 +27,27 @@ public class OurScrabbleAI implements ScrabbleAI {
     @Override
     public ScrabbleMove chooseMove() {
         if (gateKeeper.getSquare(Location.CENTER) == Board.DOUBLE_WORD_SCORE) {
-            return findFirstMove();
+            return findFirstMove(7);
         }
         return findNextMove();
     }
 
     private static char[] getHand(ArrayList<Character> hand) {
-       // int check = hand.size();
+        // int check = hand.size();
         char a = hand.get(0);
+        if (a == '_') a = 'E';
         char b = hand.get(1);
+        if (b == '_') b = 'E';
         char c = hand.get(2);
+        if (c == '_') c = 'E';
         char d = hand.get(3);
+        if (d == '_') d = 'E';
         char e = hand.get(4);
+        if (e == '_') e = 'E';
         char f = hand.get(5);
+        if (f == '_') f = 'E';
         char g = hand.get(6);
+        if (g == '_') g = 'E';
 
         char[] set = {a, b, c, d, e, f, g, ' '};
         return set;
@@ -55,46 +62,48 @@ public class OurScrabbleAI implements ScrabbleAI {
             return result;
         }
 
-        for (int i = 0; i < 8; i++) { // one
+        int elements = set.length;
+
+        for (int i = 0; i < elements; i++) { // one
             singleCombo[0] = set[i];
             if (size >= 2) {
-                for (int j = 0; j < 8; j++) { // 2
+                for (int j = 0; j < elements; j++) { // 2
                     if (j == i) {
                         continue;
                     }
                     singleCombo[1] = set[j];
                     if (size >= 3) {
-                        for (int k = 0; k < 8; k++) { // 3
+                        for (int k = 0; k < elements; k++) { // 3
                             if (k == j || k == i) {
                                 continue;
                             }
                             singleCombo[2] = set[k];
                             if (size >= 4) {
-                                for (int l = 0; l < 8; l++) { // 4
+                                for (int l = 0; l < elements; l++) { // 4
                                     if (l == k || l == j || l == i) {
                                         continue;
                                     }
                                     singleCombo[3] = set[l];
                                     if (size >= 5) {
-                                        for (int m = 0; m < 8; m++) { //5
+                                        for (int m = 0; m < elements; m++) { //5
                                             if (m == l || m == k || m == j || m == i) {
                                                 continue;
                                             }
                                             singleCombo[4] = set[m];
                                             if (size >= 6) {
-                                                for (int n = 0; n < 8; n++) { //6
+                                                for (int n = 0; n < elements; n++) { //6
                                                     if (n == m || n == l || n == k || n == j || n == i) {
                                                         continue;
                                                     }
                                                     singleCombo[5] = set[n];
                                                     if (size >= 7) {
-                                                        for (int p = 0; p < 8; p++) { // 7
+                                                        for (int p = 0; p < elements; p++) { // 7
                                                             if (p == n || p == m || p == l || p == k || p == j || p == i) {
                                                                 continue;
                                                             }
                                                             singleCombo[6] = set[p];
                                                             if(size == 8){
-                                                                for(int q = 0; q<8; q++) {
+                                                                for(int q = 0; q < elements; q++) {
                                                                     if (q == p || q == n || q == m || q == l || q == k || q == j || q == i) {
                                                                         continue;
                                                                     }
@@ -149,29 +158,28 @@ public class OurScrabbleAI implements ScrabbleAI {
     /**
      * This is necessary for the first turn, as one-letter words are not allowed.
      */
-    private ScrabbleMove findFirstMove() {
+    private ScrabbleMove findFirstMove(int wordLength) {
         ArrayList<Character> hand = gateKeeper.getHand();
         String bestWord = null;
         int bestScore = -1;
-        char[] uH = new char[7]; // updated hand to account for blanks
-        for (int i = 0; i < 7; i++) {
-            if (hand.get(i) == ' ') {
-                uH[i] = 'E';
-            } else {
-                uH[i] = hand.get(i);
-            }
+        char[] uH = new char[wordLength]; // updated hand to account for blanks
+        for (int i = 0; i < wordLength; i++) {
+            uH[i] = hand.get(i);
         }
 
         String elements = new String(uH);
         int n = uH.length;
         int k = n; //k needs to change in a for loop
-        ArrayList<String> words = new ArrayList();
-        perm1(words, elements);
+        ArrayList<char[]> wordsA = permuteWithSize(uH, wordLength);
+        ArrayList<String> words = new ArrayList<>();
+        for (char[] word : wordsA) {
+            words.add(new String(word));
+        }
         String[] permutations = new String[words.size()];
         words.toArray(permutations);
         for (String word : permutations) {
             try {
-               // StdOut.println("Trying " + word);
+                // StdOut.println("Trying " + word);
                 gateKeeper.verifyLegality(word, Location.CENTER, Location.HORIZONTAL);
                 int score = gateKeeper.score(word, Location.CENTER, Location.HORIZONTAL);
                 if (score > bestScore) {
@@ -184,11 +192,13 @@ public class OurScrabbleAI implements ScrabbleAI {
             }
         }
 
+        if (wordLength == 0) return new ExchangeTiles(ALL_TILES);
+
         if (bestScore > -1) {
             return new PlayWord(bestWord, Location.CENTER, Location.HORIZONTAL);
         }
-        //TODO if no 7 letter start, do a 6 letter start
-        return new ExchangeTiles(ALL_TILES);
+
+        return findFirstMove(wordLength - 1);
     }
 
     public static void perm1(ArrayList<String> w, String s) {
@@ -210,23 +220,23 @@ public class OurScrabbleAI implements ScrabbleAI {
 
     private static void combination(/*ArrayList<char[]> w,*/ int n, int r, int index, char[] data, int i, char[] arr) {
 
-            for (int j = 0; j < r; j++) {
-                if (index == r-1) {
-                    StdOut.println("completed " + Arrays.toString(data));
-                    why.add(data);
-                    return;
-                }
-            }
-
-            if (i >= n) {
+        for (int j = 0; j < r; j++) {
+            if (index == r-1) {
+                StdOut.println("completed " + Arrays.toString(data));
+                why.add(data);
                 return;
             }
+        }
 
-            data[index] = arr[i];
-           // StdOut.println(Arrays.toString(data) + " data and original " + Arrays.toString(arr));
-            combination(/*w,*/ n, r, index + 1, data, i + 1, arr);
+        if (i >= n) {
+            return;
+        }
 
-            combination(/*w,*/ n, r, index, data, i + 1, arr);
+        data[index] = arr[i];
+        // StdOut.println(Arrays.toString(data) + " data and original " + Arrays.toString(arr));
+        combination(/*w,*/ n, r, index + 1, data, i + 1, arr);
+
+        combination(/*w,*/ n, r, index, data, i + 1, arr);
     }
 
 
@@ -407,43 +417,49 @@ public class OurScrabbleAI implements ScrabbleAI {
             }
             ArrayList<char[]> permutations = permuteWithSize(set,plength);
             //ArrayList<char[]> allCharArrays = new ArrayList<char[]>();
-           // StdOut.println(Arrays.toString(set));
-           // combination(/*allCharArrays,*/ 8, plength, 0, new char[plength], 0, set) ;
-           // StdOut.println(" found all combinations of size " + plength);
+            // StdOut.println(Arrays.toString(set));
+            // combination(/*allCharArrays,*/ 8, plength, 0, new char[plength], 0, set) ;
+            // StdOut.println(" found all combinations of size " + plength);
 
             for (char[] w : permutations) { //for everything in the arraylist
-               // StdOut.println(Arrays.toString(w));
-               String word = String.copyValueOf(w);
-               //StdOut.println(word);
-               // ArrayList<String> words = new ArrayList();
-               // perm1(words, elements);
-               // String[] permutations = new String[words.size()];
-               // StdOut.println(words.get(0) + " is the first word" + elements);
-               // words.toArray(permutations);
+                // StdOut.println(Arrays.toString(w));
+                String word = String.copyValueOf(w);
+                //StdOut.println(word);
+                // ArrayList<String> words = new ArrayList();
+                // perm1(words, elements);
+                // String[] permutations = new String[words.size()];
+                // StdOut.println(words.get(0) + " is the first word" + elements);
+                // words.toArray(permutations);
                 // StdOut.println(permutations.length);
-               // for (String word : words) { //for every permutation of a specific char array
-                  // StdOut.println("testing " + word.toUpperCase() );
-                    int space = 0;
-                    for(int i = 0; i<plength; i++){
-                        if(w[i] == ' ') { space = i; }
-                    }
-                    ArrayList<Location[]> priority = finalLocations.get(space);
+                // for (String word : words) { //for every permutation of a specific char array
+                // StdOut.println("testing " + word.toUpperCase() );
+                ArrayList<Location[]> priority;
+                int space = -1;
+                for(int i = 0; i<plength; i++){
+                    if(w[i] == ' ') { space = i; }
+                }
+                if(space != -1) {
+                    priority = finalLocations.get(space);
+                }
+                else{
+                    priority = createPriority(lengths, plength, plength);
+                }
 
-                    for (Location[] validLocation : priority) {
-                        try {
-                           // StdOut.println("checking " + word + " at " + validLocation[0] + " ");
-                            gateKeeper.verifyLegality(word, validLocation[0], validLocation[1]);
-                            int score = gateKeeper.score(word, validLocation[0], validLocation[1]);
-                            if (score > bestScore) {
-                                bestScore = score;
-                                //return new PlayWord(word, validLocation[0], validLocation[1]);
-                                bestMove = new PlayWord(word, validLocation[0], validLocation[1]);
-                                foundWord = true;
-                            }
-                        } catch (IllegalMoveException e) {
-                            //System.err.println(e.getMessage());
+                for (Location[] validLocation : priority) {
+                    try {
+                        // StdOut.println("checking " + word + " at " + validLocation[0] + " ");
+                        gateKeeper.verifyLegality(word, validLocation[0], validLocation[1]);
+                        int score = gateKeeper.score(word, validLocation[0], validLocation[1]);
+                        if (score > bestScore) {
+                            bestScore = score;
+                            //return new PlayWord(word, validLocation[0], validLocation[1]);
+                            bestMove = new PlayWord(word, validLocation[0], validLocation[1]);
+                            foundWord = true;
                         }
+                    } catch (IllegalMoveException e) {
+                        //System.err.println(e.getMessage());
                     }
+                }
 
                 //}
             }
