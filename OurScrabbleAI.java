@@ -159,7 +159,6 @@ public class OurScrabbleAI implements ScrabbleAI {
                 words.toArray(permutations);
                 for (String word : permutations) { //for every permutation of a specific character array
                     for (Location[] validLocation : priority) {
-                        for (int col = 0; col < Board.WIDTH; col++) {
                                 try {
                                     gateKeeper.verifyLegality(word, validLocation[0], validLocation[1]);
                                     int score = gateKeeper.score(word, validLocation[0], validLocation[1]);
@@ -172,7 +171,6 @@ public class OurScrabbleAI implements ScrabbleAI {
                                     System.err.println(e.getMessage());
                                 }
                             }
-                        }
                     
                 }
             }
