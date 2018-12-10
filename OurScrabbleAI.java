@@ -31,14 +31,14 @@ public class OurScrabbleAI implements ScrabbleAI {
         return findFourTileMove();
     }
 
-    private static char[] getHand() {
-        char a = getHand(0);
-        char b = getHand(1);
-        char c = getHand(2);
-        char d = getHand(3);
-        char e = getHand(4);
-        char f = getHand(5);
-        char g = getHand(6);
+    private static char[] getHand(ArrayList<Character> hand) {
+        char a = hand.get(0);
+        char b = hand.get(1);
+        char c = hand.get(2);
+        char d = hand.get(3);
+        char e = hand.get(4);
+        char f = hand.get(5);
+        char g = hand.get(6);
 
         return char[] set = {a, b, c, d, e, f, g, ' '};
     }
@@ -142,17 +142,12 @@ public class OurScrabbleAI implements ScrabbleAI {
         ArrayList<Character> hand = gateKeeper.getHand();
         PlayWord bestMove = null;
         int bestScore = -1;
-        char[] set = getHand();
-        char[] combSet = new char[set.length+1];
-        for (int h = 0; h < set.length; h++) {
-            combSet[h] = set[h];
-        }
-        combSet[set.length] = ' ';
+        char[] set = getHand(hand);
         boolean foundWord = false;
         int plength = 8;
         while (!foundWord) {
             ArrayList<char[]> allCharArrays = new ArrayList<char[]>();
-            combination(allCharArrays, 8, plength, 0, new char[plength], 0, combSet) ;
+            combination(allCharArrays, 8, plength, 0, new char[plength], 0, set) ;
             for (char[] w : allCharArrays) { //for everything in the arraylist
                 String elements = new String(w);
                 ArrayList<String> words = new ArrayList();
