@@ -359,7 +359,7 @@ public class Tibbopottomus implements ScrabbleAI {
         int plength = 8;
         int[][][] lengths = findValidLocations(gateKeeper); // finds valid locations on the board
 
-        while (!foundWord || plength>=4) { // if we've found a word by the time we get to small lengths, we just skip the shorter ones
+        while (!foundWord && plength>=2) { // if we've found a word by the time we get to small lengths, we just skip the shorter ones
             ArrayList<ArrayList<Location[]>> finalLocations = new ArrayList<ArrayList<Location[]>>(8);
             for(int i = 0; i< plength; i++){
                 ArrayList<Location[]> priority = createPriority(lengths,plength-1, i);  // add validLocations for each location of the space in the word
