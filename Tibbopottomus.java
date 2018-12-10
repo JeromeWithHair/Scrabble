@@ -344,8 +344,7 @@ public class Tibbopottomus implements ScrabbleAI {
     }
 
     /**
-     * Technically this tries to make a two-letter word by playing one tile; it won't find words that simply add a
-     * tile to the end of an existing word.
+     * Creates an array of valid locations. Then creates a list of permutaions and checks those against valid locations
      */
     private ScrabbleMove findNextMove() {
         ArrayList<Character> hand = gateKeeper.getHand();
